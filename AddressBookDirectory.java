@@ -18,7 +18,7 @@ public class AddressBookDirectory {
         do {
             System.out.println("\nChoose the operation on the Directory you want to perform");
             System.out.println(
-                    "1.Add an Address Book\n2.Display Address book Directory\n3.Search Person by Region\n4.Exit Address book System");
+                    "1.Add an Address Book\n2.Display Address book Directory\n3.Search Person By Religion\n4.View People By Region\n5.Count People By Region\n6.Exit Address book System");
 
             switch (sc.nextInt()) {
                 case 1:
@@ -28,13 +28,28 @@ public class AddressBookDirectory {
                     displayDirectoryContents();
                     break;
                 case 3:
-                    System.out.println("Enter 1 to Search By City\nEnter 2 to Search By State");
+                    System.out.println("Enter \n1.Search By City\n2.Search By State");
                     int searChoice = sc.nextInt();
-                    if(searChoice==1)
+                    if (searChoice == 1)
                         searchByCity();
-                    else if(searChoice==2)
+                    else
                         searchByState();
-                    else System.out.println("Enter valid input");
+                    break;
+                case 4:
+                    System.out.println("Enter \n1.Display By City\n2.Display By State");
+                    int displayChoice = sc.nextInt();
+                    if (displayChoice == 1)
+                        displayPeopleByRegion(AddressBook.city);
+                    else
+                        displayPeopleByRegion(AddressBook.state);
+                    break;
+                case 5:
+                    System.out.println("Enter \n1.Display By City\n2.Display By State");
+                    int countChoice = sc.nextInt();
+                    if(countChoice==1)
+                        countPeopleByRegion(AddressBook.city);
+                    else
+                        countPeopleByRegion(AddressBook.state);
                     break;
                 default:
                     moreChanges = false;
@@ -83,11 +98,14 @@ public class AddressBookDirectory {
 
         System.out.println("Enter the name of the City where the Person resides : ");
         String cityName = sc.next();
+        System.out.println("Enter the name of the Person : ");
+        String personName = sc.next();
 
         for (AddressBook addressBook : addressBookDirectory.values()) {
             ArrayList<Contact> contactList = addressBook.getContact();
             contactList.stream()
-                    .filter(person -> person.getAddress().getCity().equals(cityName))
+                    .filter(person -> person.getFirstName().equals(personName)
+                            && person.getAddress().getCity().equals(cityName))
                     .forEach(person -> System.out.println(person));
         }
     }
@@ -99,14 +117,48 @@ public class AddressBookDirectory {
 
         System.out.println("Enter the name of the State where the Person resides : ");
         String stateName = sc.next();
+        System.out.println("Enter the name of the Person : ");
+        String personName = sc.next();
 
         for (AddressBook addressBook : addressBookDirectory.values()) {
             ArrayList<Contact> contactList = ((AddressBook) addressBook).getContact();
             contactList.stream()
-                    .filter(person -> person.getAddress().getState().equals(stateName))
+                    .filter(person -> person.getFirstName().equals(personName)
+                            && person.getAddress().getState().equals(stateName))
                     .forEach(person -> System.out.println(person));
         }
 
+    }
+
+    /*
+     * Displaying person by his/her city or state
+     */
+    public void displayPeopleByRegion(HashMap<String, ArrayList<Contact>> listToDisplay) {
+
+        System.out.println("Enter the name of the region :");
+        String regionName = sc.next();
+
+        listToDisplay.values().stream()
+                .map(region -> region.stream()
+                        .filter(person -> person.getAddress().getState().equals(regionName)
+                                || person.getAddress().getCity().equals(regionName)))
+                .forEach(person -> person.forEach(personDetails -> System.out.println(personDetails)));
+    }
+
+    /*
+     * counting persons by City or State
+     */
+    public void countPeopleByRegion(HashMap<String, ArrayList<Contact>> listToDisplay) {
+
+        System.out.println("Enter the name of the region :");
+        String regionName = sc.next();
+
+        long countPeople = listToDisplay.values().stream()
+                .map(region -> region.stream().filter(person -> person.getAddress().getState().equals(regionName)
+                        || person.getAddress().getCity().equals(regionName)))
+                .count();
+
+        System.out.println("Number of People residing in " + regionName + " are: " + countPeople + "\n");
     }
 
 }
