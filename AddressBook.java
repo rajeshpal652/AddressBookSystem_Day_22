@@ -12,6 +12,9 @@ public class AddressBook {
     Scanner sc = new Scanner(System.in);
     public Map<String, Contact> contactList = new HashMap<String, Contact>();
 
+    public static HashMap<String, ArrayList<Contact>> city = new HashMap<String, ArrayList<Contact>>();
+    public static HashMap<String, ArrayList<Contact>> state = new HashMap<String, ArrayList<Contact>>();
+
     public String addressBookName;
     public boolean isPresent = false;
 
@@ -160,6 +163,26 @@ public class AddressBook {
             System.out.println("Successfully deleted.");
         } else {
             System.out.println("Contact not found.");
+        }
+    }
+
+    public void addPersonToCity(Contact contact) {
+        if (city.containsKey(contact.getAddress().getCity())) {
+            city.get(contact.getAddress().getCity()).add(contact);
+        } else {
+            ArrayList<Contact> cityList = new ArrayList<Contact>();
+            cityList.add(contact);
+            city.put(contact.getAddress().getCity(), cityList);
+        }
+    }
+
+    public void addPersonToState(Contact contact) {
+        if (state.containsKey(contact.getAddress().getState())) {
+            state.get(contact.getAddress().getState()).add(contact);
+        } else {
+            ArrayList<Contact> stateList = new ArrayList<Contact>();
+            stateList.add(contact);
+            state.put(contact.getAddress().getState(), stateList);
         }
     }
 }
