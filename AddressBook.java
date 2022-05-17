@@ -3,10 +3,8 @@ package com.bl.addressbook;
  *  Performing operations by creating methods.
  * @Author: Rajesh Pal
  */
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AddressBook {
     Scanner sc = new Scanner(System.in);
@@ -34,7 +32,7 @@ public class AddressBook {
         do {
             System.out.println("\n Select the operation you want to perform : ");
             System.out.println(
-                    "1.Add Contact To Address Book\n2.Edit Existing Entry\n3.Delete Contact\n4.Display Address book\n5.Exit Address book System");
+                    "1.Add Contact To Address Book\n2.Edit Existing Entry\n3.Delete Contact\n4.Display Address book\n5.Sort Address Book\n6.Exit Address Book System");
             switch (sc.nextInt()) {
                 case 1:
                     addContact();
@@ -47,6 +45,9 @@ public class AddressBook {
                     break;
                 case 4:
                     displayContents();
+                    break;
+                case 5:
+                    sortAddressBook();
                     break;
                 default:
                     change = false;
@@ -184,5 +185,24 @@ public class AddressBook {
             stateList.add(contact);
             state.put(contact.getAddress().getState(), stateList);
         }
+    }
+
+    public void sortAddressBook() {
+        List<Contact> sortedContactList;
+
+        sortedContactList = contactList.values().stream().sorted((firstPerson, secondPerson) -> firstPerson.getFirstName().
+                        compareTo(secondPerson.getFirstName())).collect(Collectors.toList());
+
+        printSortedList(sortedContactList);
+    }
+
+    public void printSortedList(List<Contact> sortedContactList) {
+        System.out.println("------Sorted address book " +this.getAddressBookName()+ "-------- ");
+        Iterator iterator = sortedContactList.iterator();
+        while(iterator.hasNext()) {
+            System.out.println(iterator.next());
+            System.out.println();
+        }
+        System.out.println("=======================================");
     }
 }
